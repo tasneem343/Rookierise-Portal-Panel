@@ -1,0 +1,28 @@
+.logo {
+  width: 129px;
+  height: auto;
+  max-width: 100%;
+  display: block;
+}
+.header{
+  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 12px 20px;
+  top: 0px;
+  margin: 0pxs;
+}
+.language-button{
+  font-size: 20px;
+  font-weight:lighter;
+  font-family:cairo ;
+  color: #0a003d;
+  border: none;
+  background: none;
+  padding: 12px 25px;
+  
+}
+.language-button:hover{
+  cursor: pointer;
+}
