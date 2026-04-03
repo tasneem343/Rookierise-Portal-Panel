@@ -1,16 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../Core/Services/authservice';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-signup',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule,RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink],
   templateUrl: './signup.html',
   styleUrls: ['./signup.css'],
 })
 export class Signup {
-  // Custom Validators - defined as static methods
+
+  // ================= Validators =================
   private static arabicOnlyValidator(control: AbstractControl): ValidationErrors | null {
     const arabicRegex = /^[\u0600-\u06FF\s]+$/;
     return control.value && !arabicRegex.test(control.value) ? { arabicOnly: true } : null;
@@ -35,17 +38,29 @@ export class Signup {
     }
   }
 
-  // Form and UI Properties
+  // ================= Properties =================
   companyForm: FormGroup;
-  logoPreview: string | null = null;
+
+  logoPreview: string | null = null; // Base64 (للـ API)
+  selectedFile: File | null = null; // File (للـ preview)
+
   logoError: string | null = null;
   logoFileName: string = '';
 
+  showSuccess = false;
+  showError = false;
+  errorMessage = '';
 
-  // Constants
   private readonly ALLOWED_LOGO_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif'];
 
-  constructor(private fb: FormBuilder,private cdr: ChangeDetectorRef) {
+  // ================= Constructor =================
+  constructor(
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService,
+    private toastr: ToastrService,
+    private router: Router
+  ) {
     this.companyForm = this.fb.group({
       companyNameEn: ['', [Validators.required, Signup.englishOnlyValidator]],
       companyNameAr: ['', [Validators.required, Signup.arabicOnlyValidator]],
@@ -53,10 +68,10 @@ export class Signup {
       phone: ['', Signup.phoneValidator],
       websiteUrl: ['', [Validators.required, Signup.urlValidator]],
       logo: [null]
-      
     });
   }
 
+  // ================= File Upload =================
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) this.validateAndReadFile(file);
@@ -70,55 +85,81 @@ export class Signup {
 
   validateAndReadFile(file: File) {
     const extension = file.name.split('.').pop()?.toLowerCase();
-  
+
     if (!extension || !this.ALLOWED_LOGO_EXTENSIONS.includes(extension)) {
       this.logoError = `Invalid file type. Allowed: ${this.ALLOWED_LOGO_EXTENSIONS.map(e => '.' + e).join(', ')}`;
       this.logoPreview = null;
+      this.selectedFile = null;
       this.logoFileName = '';
       this.companyForm.patchValue({ logo: null });
       return;
     }
-  
+
     this.logoError = null;
-    this.logoFileName = file.name; 
+    this.logoFileName = file.name;
+    this.selectedFile = file; // 👈 مهم
+
     const reader = new FileReader();
     reader.onload = () => {
-      this.logoPreview = reader.result as string;
+      this.logoPreview = reader.result as string; // 👈 Base64
       this.companyForm.patchValue({ logo: file });
       this.cdr.detectChanges();
     };
     reader.readAsDataURL(file);
   }
+
   removeLogo(event: Event) {
     event.stopPropagation();
     this.logoPreview = null;
+    this.selectedFile = null;
     this.logoError = null;
     this.companyForm.patchValue({ logo: null });
     this.logoFileName = '';
-
   }
 
-  /** Opens the uploaded logo preview in a new browser tab. */
+  // ================= Preview =================
   openLogoPreview(event: Event) {
     event.stopPropagation();
-    if (!this.logoPreview) return;
-    const win = window.open('', '_blank', 'noopener,noreferrer');
-    if (!win) return;
-    win.document.write(
-      '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Logo preview</title>' +
-        '<style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#1a1a1a}' +
-        'img{max-width:100%;max-height:100vh;object-fit:contain}</style></head><body></body></html>'
-    );
-    win.document.close();
-    const img = win.document.createElement('img');
-    img.src = this.logoPreview;
-    img.alt = 'Logo preview';
-    win.document.body.appendChild(img);
+    if (!this.selectedFile) return;
+
+    const url = URL.createObjectURL(this.selectedFile);
+     window.open(
+    url, 
+    '_blank',
+    'width=700,height=600,top=100,left=50,scrollbars=yes,resizable=yes'
+  );
   }
 
+  // ================= Submit =================
   onSubmit() {
     if (this.companyForm.valid) {
-      console.log(this.companyForm.value);
+
+      const formData = {
+        companyNameEnglish: this.companyForm.value.companyNameEn,
+        companyNameArabic: this.companyForm.value.companyNameAr,
+        email: this.companyForm.value.email,
+        phoneNumber: this.companyForm.value.phone,
+        websiteUrl: this.companyForm.value.websiteUrl,
+        companyLogo: this.logoPreview // 👈 Base64 للباك
+      };
+
+      this.authService.signup(formData).subscribe({
+        next: () => {
+          this.showSuccess = true;
+          this.cdr.detectChanges();
+
+          setTimeout(() => {
+            this.showSuccess = false;
+            this.router.navigate(['/login']);
+          }, 3000);
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Unknown Error';
+          this.showError = true;
+          setTimeout(() => this.showError = false, 3000);
+        }
+      });
+
     } else {
       this.companyForm.markAllAsTouched();
     }

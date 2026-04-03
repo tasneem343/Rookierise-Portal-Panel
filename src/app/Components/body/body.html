@@ -71,5 +71,14 @@
 
   </form>
 </div>
+<div class="toast-notification-success" [class.show]="showSuccess">
+  <span>✓</span>
+  <p style="margin-top: 10px; margin-left: 60px;">Login successful</p>
+  <img src="assets/close.png" (click)="showSuccess = false" style="cursor:pointer; margin-left:auto;"/>
+</div>
 
+<div class="toast-notification--fail" [class.show]="showError">
+  <p style="margin-top: 10px; margin-left: 60px;">{{ errorMessage }}</p>
+  <img src="assets/close.png" (click)="showError = false" style="cursor:pointer; margin-left:auto;"/>
+</div>
 </div>

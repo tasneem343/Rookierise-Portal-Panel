@@ -18,9 +18,71 @@
   margin-right: 6px;
   vertical-align: middle;
 }
+.toast-notification--fail::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url('/assets/error-circle.png') center center no-repeat;
+  background-size: contain;
+  margin-right: 6px;
+  vertical-align: middle;
+}
 
-
-
+.toast-notification-success {
+   width: 90%;
+  max-width: 400px;
+  background: #24D23B80; 
+  border-bottom: 8px solid 
+#24D23B; 
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 17px 23px 17px 6px;
+  position: fixed;
+  bottom: 30px; 
+  left: 80%;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s ease;
+  z-index: 9999;
+  font-family: cairo;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: -1.62px;
+  height: 60px;
+}
+.toast-notification--fail {
+ min-width: 350px;
+  height: 50px;
+  background: #FD566880; 
+  border-bottom: 8px solid #FD5668; 
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 17px 23px 17px 6px;
+  position: fixed;
+  bottom: 30px; 
+  left: 80%;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s ease;
+  z-index: 9999;
+  font-family: cairo;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: -1.62px;
+  
+}
+.toast-notification-success.show,
+.toast-notification--fail.show {
+  opacity: 1;
+  pointer-events: all;
+}
 
 .form-group {
   display: flex;
