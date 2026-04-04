@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, effect } from '@angular/core';
 import { Footer } from '../footer/footer';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../Core/Services/authservice';
+import { Languageservice } from '../../Core/Services/languageservice';
 
 @Component({
   selector: 'app-body',
@@ -16,6 +17,8 @@ export class Body {
   showError = false;
   errorMessage = '';
   showSuccess = false;
+    isArabic = false;
+
   loginForm = new FormGroup({
     userType: new FormControl('company'),
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -23,7 +26,13 @@ export class Body {
     remember: new FormControl(true)
   });
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router,  private cdr: ChangeDetectorRef,private langService: Languageservice
+) {effect(() => {
+      this.isArabic = this.langService.isArabic();
+      this.cdr.detectChanges();
+    });
+
+}
 
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -47,13 +56,15 @@ export class Body {
   } else {
     sessionStorage.setItem('token', res.token);
   }
-  this.showSuccess = true;
+  
+  this.showSuccess = true; 
+  this.cdr.detectChanges();
   setTimeout(() => this.showSuccess = false, 3000);
       },
       error: (err) => {
-        this.errorMessage =  'Invalid email or password';
-        this.showError = true;
-        setTimeout(() => this.showError = false, 3000);
+      this.errorMessage = this.isArabic ? 'بريد إلكتروني أو كلمة مرور غير صحيحة' : 'Invalid email or password';
+  this.showError = true;
+  setTimeout(() => this.showError = false, 3000);
       }
     });
   }

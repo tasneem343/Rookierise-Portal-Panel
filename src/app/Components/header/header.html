@@ -1,8 +1,10 @@
-<header class="header">
+<header class="header" [dir]="isArabic ? 'rtl' : 'ltr'">
   <div>
-    <img src="assets/image.png" alt="Logo" class="logo"> 
+    <img src="assets/image.png" alt="Logo" class="logo">
   </div>
   <div>
-    <button class="language-button">العربيه</button>
+    <button class="language-button" (click)="toggleLanguage()">
+      {{ isArabic ? 'English' : 'العربيه' }}
+    </button>
   </div>
 </header>

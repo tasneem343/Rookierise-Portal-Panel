@@ -1,9 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Languageservice } from '../../Core/Services/languageservice'; 
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
-export class Header {}
+export class Header {
+  isArabic = false;
+
+  constructor(private langService: Languageservice) {
+    effect(() => {
+      this.isArabic = this.langService.isArabic();
+    });
+  }
+
+  toggleLanguage() {
+    this.langService.toggle();
+  }
+}

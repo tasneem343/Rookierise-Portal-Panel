@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, effect } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../Core/Services/authservice';
 import { ToastrService } from 'ngx-toastr';
+import { Languageservice } from '../../Core/Services/languageservice';
 
 @Component({
   selector: 'app-signup',
@@ -50,6 +51,8 @@ export class Signup {
   showSuccess = false;
   showError = false;
   errorMessage = '';
+    isArabic = false;
+
 
   private readonly ALLOWED_LOGO_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif'];
 
@@ -59,8 +62,14 @@ export class Signup {
     private cdr: ChangeDetectorRef,
     private authService: AuthService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+        private langService: Languageservice
+
   ) {
+    effect(() => {
+      this.isArabic = this.langService.isArabic();
+      this.cdr.detectChanges();
+    });
     this.companyForm = this.fb.group({
       companyNameEn: ['', [Validators.required, Signup.englishOnlyValidator]],
       companyNameAr: ['', [Validators.required, Signup.arabicOnlyValidator]],
@@ -97,11 +106,10 @@ export class Signup {
 
     this.logoError = null;
     this.logoFileName = file.name;
-    this.selectedFile = file; // 👈 مهم
-
+    this.selectedFile = file; 
     const reader = new FileReader();
     reader.onload = () => {
-      this.logoPreview = reader.result as string; // 👈 Base64
+      this.logoPreview = reader.result as string; 
       this.companyForm.patchValue({ logo: file });
       this.cdr.detectChanges();
     };
@@ -140,7 +148,7 @@ export class Signup {
         email: this.companyForm.value.email,
         phoneNumber: this.companyForm.value.phone,
         websiteUrl: this.companyForm.value.websiteUrl,
-        companyLogo: this.logoPreview // 👈 Base64 للباك
+        companyLogo: this.logoPreview
       };
 
       this.authService.signup(formData).subscribe({

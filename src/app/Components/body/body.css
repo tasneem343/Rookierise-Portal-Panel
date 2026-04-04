@@ -128,6 +128,7 @@ margin-top: 20px;
   font-family: cairo;
 }
 
+
 .form-field::placeholder {
   color: #8a8484;
   font-family: cairo;
@@ -328,7 +329,15 @@ button:disabled {
 }
 
 
+[dir='rtl'] .eye-icon {
+  right: auto;
+  left: 12px;
+}
 
+[dir='rtl'] .password-wrapper input {
+  padding-right: 14px;
+  padding-left: 40px;
+}
 @media (max-width: 768px) {
     .text-header {
         font-size: 26px;
