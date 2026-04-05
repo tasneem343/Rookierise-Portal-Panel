@@ -62,9 +62,10 @@ export class Body {
   setTimeout(() => this.showSuccess = false, 3000);
       },
       error: (err) => {
-      this.errorMessage = this.isArabic ? 'بريد إلكتروني أو كلمة مرور غير صحيحة' : 'Invalid email or password';
+      this.errorMessage = err.error?.message || 'Login failed.';
   this.showError = true;
-  setTimeout(() => this.showError = false, 3000);
+   this.cdr.detectChanges();
+  setTimeout(() => this.showError = false, 2000);
       }
     });
   }

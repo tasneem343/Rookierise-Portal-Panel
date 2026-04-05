@@ -338,6 +338,10 @@ button:disabled {
   padding-right: 14px;
   padding-left: 40px;
 }
+[dir='rtl'] .toast-notification--fail,
+[dir='rtl'] .toast-notification-success {
+  flex-direction: row-reverse;
+}
 @media (max-width: 768px) {
     .text-header {
         font-size: 26px;

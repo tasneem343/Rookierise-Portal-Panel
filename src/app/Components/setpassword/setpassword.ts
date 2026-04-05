@@ -117,8 +117,9 @@ export class Setpassword implements OnInit {
         }, 3000);
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || 'Invalid or expired OTP.';
+        this.errorMessage = err.error?.message || 'Unknown Error';
         this.showError = true;
+         this.cdr.detectChanges();
         setTimeout(() => this.showError = false, 2000);
       }
     });

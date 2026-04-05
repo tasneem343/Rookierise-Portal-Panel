@@ -164,7 +164,8 @@ export class Signup {
         error: (err) => {
           this.errorMessage = err.error?.message || 'Unknown Error';
           this.showError = true;
-          setTimeout(() => this.showError = false, 3000);
+           this.cdr.detectChanges();
+          setTimeout(() => this.showError = false, 2000);
         }
       });
 
