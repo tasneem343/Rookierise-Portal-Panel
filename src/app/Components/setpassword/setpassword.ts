@@ -125,7 +125,9 @@ export class Setpassword implements OnInit {
     });
   }
 
-  onCancel() { this.passwordForm.reset(); }
+  onCancel() { this.passwordForm.reset(); 
+    this.router.navigate(['/login']);
+  }
 
 get passwordErrorsInlineText(): string {
   const c = this.passwordForm.get('password');
