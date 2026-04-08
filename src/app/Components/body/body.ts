@@ -18,7 +18,7 @@ export class Body {
   errorMessage = '';
   showSuccess = false;
     isArabic = false;
-
+  isLoading = false;
   loginForm = new FormGroup({
     userType: new FormControl('company'),
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -37,36 +37,41 @@ export class Body {
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
+onSubmit() {
+  if (this.loginForm.invalid) {
+    this.loginForm.markAllAsTouched();
+    return;
+  }
+  this.isLoading = true;
+  const data = {
+    email: this.loginForm.value.email,
+    password: this.loginForm.value.password
+  };
 
-  onSubmit() {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
+  this.authService.login(data).subscribe({
+    next: (res) => {
+     if (this.loginForm.value.remember) {
+  localStorage.setItem('token', res.token);
+} else {
+  sessionStorage.setItem('token', res.token);
+}
+
+this.showSuccess = true; 
+this.isLoading = false; 
+this.cdr.detectChanges();
+setTimeout(() => this.showSuccess = false, 3000);
+    },
+    error: (err) => {
+    this.errorMessage = err.error?.message || 'Login failed.';
+        this.showError = true;
+
+     this.cdr.detectChanges();
+       setTimeout(() => {
+    this.isLoading = false;
+    this.cdr.detectChanges();
+  }, 100);
+    setTimeout(() => this.showError = false, 3000);
     }
-
-    const data = {
-      email: this.loginForm.value.email,
-      password: this.loginForm.value.password
-    };
-
-    this.authService.login(data).subscribe({
-      next: (res) => {
-       if (this.loginForm.value.remember) {
-    localStorage.setItem('token', res.token);
-  } else {
-    sessionStorage.setItem('token', res.token);
-  }
-  
-  this.showSuccess = true; 
-  this.cdr.detectChanges();
-  setTimeout(() => this.showSuccess = false, 3000);
-      },
-      error: (err) => {
-      this.errorMessage = err.error?.message || 'Login failed.';
-  this.showError = true;
-   this.cdr.detectChanges();
-  setTimeout(() => this.showError = false, 2000);
-      }
-    });
-  }
+  });
+}
 }

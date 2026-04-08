@@ -48,8 +48,12 @@
         <a routerLink="/forgot-password">{{ isArabic ? 'نسيت كلمة المرور؟' : 'Forget password?' }}</a>
       </div>
 
-      <button type="submit" [disabled]="loginForm.invalid">{{ isArabic ? ' دخول' : 'Login' }}</button>
-
+      <button type="submit" [disabled]="loginForm.invalid || isLoading">
+  <svg *ngIf="isLoading" class="loading-spinner" viewBox="0 0 50 50">
+    <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="31.4 94.2"/>
+  </svg>
+  {{ isArabic ? ' دخول' : 'Login' }}
+</button>
       <div class="remember">
         <input type="checkbox" formControlName="remember">
         <label>{{ isArabic ? 'تذكرني' : 'Remember me' }}</label>

@@ -159,7 +159,7 @@ export class Signup {
           setTimeout(() => {
             this.showSuccess = false;
             this.router.navigate(['/login']);
-          }, 3000);
+          }, 2000);
         },
         error: (err) => {
           this.errorMessage = err.error?.message || 'Unknown Error';
