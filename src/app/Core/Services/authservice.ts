@@ -19,6 +19,6 @@ export class AuthService {
   return this.http.post(`${this.apiUrl}/set-password`, data);
 }
 login(data: any): Observable<any> {
-  return this.http.post(`${this.apiUrl}/login`, data);
+  return this.http.post(`${this.apiUrl}/signin`, data);
 }
 }
