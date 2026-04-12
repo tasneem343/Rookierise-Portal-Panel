@@ -42,8 +42,8 @@ export class Signup {
   // ================= Properties =================
   companyForm: FormGroup;
 
-  logoPreview: string | null = null; // Base64 (للـ API)
-  selectedFile: File | null = null; // File (للـ preview)
+  logoPreview: string | null = null; 
+  selectedFile: File | null = null; 
 
   logoError: string | null = null;
   logoFileName: string = '';
@@ -54,7 +54,7 @@ export class Signup {
     isArabic = false;
 
 
-  private readonly ALLOWED_LOGO_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif'];
+  private readonly ALLOWED_LOGO_EXTENSIONS = ['jpeg', 'png'];
 
   // ================= Constructor =================
   constructor(
