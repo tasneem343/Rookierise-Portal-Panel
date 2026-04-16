@@ -3,8 +3,8 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators }
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../Core/Services/authservice';
-import { Languageservice } from '../../Core/Services/languageservice';
+import { AuthService } from '../../Services/AccountService/AccountService';
+import { Languageservice } from '../../Services/LanguageService/Languageservice';
 
 const PASSWORD_ALLOWED_PATTERN = /^[\x21-\x7E]*$/;
 
@@ -54,6 +54,8 @@ export class Setpassword implements OnInit {
 
   passwordForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
+      otp: new FormControl(''), 
+
     password: new FormControl('', [
       Validators.required,
   Validators.minLength(8),
@@ -82,8 +84,13 @@ export class Setpassword implements OnInit {
   }
 
   ngOnInit() {
-      const email = this.route.snapshot.queryParamMap.get('email');
-  if (email) this.passwordForm.patchValue({ email });
+     const otp = this.route.snapshot.queryParamMap.get('otp');
+
+  if (otp) {
+    this.passwordForm.patchValue({
+      otp: otp
+    });
+  }
   
   }
 
@@ -104,6 +111,7 @@ export class Setpassword implements OnInit {
 
     const data = {
       email: this.passwordForm.value.email,
+       code: this.passwordForm.value.otp,
       password: this.passwordForm.value.password
     };
 

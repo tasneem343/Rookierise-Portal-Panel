@@ -1,6 +1,6 @@
 import { Component, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Languageservice } from '../../Core/Services/languageservice'; 
+import { Languageservice } from '../../Services/LanguageService/Languageservice'; 
 
 @Component({
   selector: 'app-header',

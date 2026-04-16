@@ -60,7 +60,6 @@
       </div>
 
     </form>
-  </div>
 
   <div class="toast-notification-success" [class.show]="showSuccess">
     <span>✓</span>
@@ -71,5 +70,30 @@
   <div class="toast-notification--fail" [class.show]="showError">
     <p style="margin-top: 10px; margin-left: 60px;">{{ errorMessage }}</p>
     <img src="assets/close.png" (click)="showError = false" style="cursor:pointer; margin-left:auto;"/>
+  </div>
+</div>
+</div>
+<div class="footer-div" [dir]="isArabic ? 'rtl' : 'ltr'">
+  <div>
+    <hr class="line">
+    <p class="text-middle">{{ isArabic ? 'أو يمكنك' : 'Or you can' }}</p>
+  </div>
+  <div class="footer-site">
+    <div class="google-btn">
+      <button class="btn">
+        <img class="img" src="assets/google.png" alt="Google Logo">{{ isArabic ? 'تسجيل الدخول بواسطة Google   ' : 'Sign in with Google' }}
+      </button>
+    </div>
+    <div class="microsoft-btn">
+      <button class="btn">
+        <img class="img" src="assets/microsoft.png" alt="Microsoft Logo">{{ isArabic ? 'تسجيل الدخول بواسطة Microsoft' : 'Sign in with Microsoft' }}
+      </button>
+    </div>
+  </div>
+  <div class="signup-div">
+    <button class="signup-btn">
+      {{ isArabic ? 'ليس لديك حساب؟' : "Don't have an account?" }}
+      <a routerLink="/signup">{{ isArabic ? 'سجل الآن' : 'Sign up now' }}</a>
+    </button>
   </div>
 </div>

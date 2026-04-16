@@ -1,18 +1,17 @@
 import { ChangeDetectorRef, Component, effect } from '@angular/core';
-import { Footer } from '../footer/footer';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { AuthService } from '../../Core/Services/authservice';
-import { Languageservice } from '../../Core/Services/languageservice';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../Services/AccountService/AccountService';
+import { Languageservice } from '../../Services/LanguageService/Languageservice';
 
 @Component({
-  selector: 'app-body',
-  imports: [Footer, ReactiveFormsModule, CommonModule],
-  templateUrl: './body.html',
-  styleUrl: './body.css',
+  selector: 'app-Login',
+  imports: [ ReactiveFormsModule, CommonModule,RouterLink],
+  templateUrl: './Login.html',
+  styleUrl: './Login.css',
 })
-export class Body {
+export class Login {
   showPassword = false;
   showError = false;
   errorMessage = '';
@@ -48,7 +47,7 @@ onSubmit() {
     password: this.loginForm.value.password
   };
 
-  this.authService.login(data).subscribe({
+  this.authService.signIn(data).subscribe({
     next: (res) => {
      if (this.loginForm.value.remember) {
   localStorage.setItem('token', res.token);

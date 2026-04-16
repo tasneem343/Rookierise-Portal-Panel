@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, effect } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../Core/Services/authservice';
+import { AuthService } from '../../Services/AccountService/AccountService';
 import { ToastrService } from 'ngx-toastr';
-import { Languageservice } from '../../Core/Services/languageservice';
+import { Languageservice } from '../../Services/LanguageService/Languageservice';
 
 @Component({
   selector: 'app-signup',
